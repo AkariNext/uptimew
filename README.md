@@ -1,34 +1,14 @@
-# Welcome to Remix + Vite!
+# UPTIMEW
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/guides/vite) for details on supported features.
+可用性を確認するためのサイトになる...予定
 
-## Development
+## 必要なもの
 
-Run the Express server with Vite dev middleware:
+### Casdoor（認証用）
 
-```shellscript
-npm run dev
-```
-
-## Deployment
-
-First, build your app for production:
+開発環境で一時的に必要な場合は以下のコマンドで簡易的なサーバーを用意できる
+ユーザー名は `admin` パスワードは `123` となっている
 
 ```sh
-npm run build
+docker run -p 8000:8000 casbin/casdoor-all-in-one
 ```
-
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying Express applications you should be right at home. Just make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
