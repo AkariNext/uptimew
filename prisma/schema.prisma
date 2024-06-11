@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id              String           @id @default(cuid())
+  name            String
+  icon            String?
+  monitoringHosts MonitoringHost[] // テナントが持つ監視対象のホストリスト
+  owner           User             @relation(fields: [ownerId], references: [id])
+  ownerId         String           @unique // テナントのオーナー
+
+  members TenantUser[]
+  Role    Role[]
+
+  @@unique([name, ownerId]) // 同一人物が同じ名前のテナントを作成できないように
+}
+
+model User {
+  id           String       @id @default(cuid())
+  icon         String?
+  sub          String       @unique
+  username     String
+  ownedTenants Tenant[] // 自分が作成したテナント
+  TenantUser   TenantUser[]
+}
+
+model Role {
+  id       String @id @default(cuid())
+  name     String
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+  tenantId String
+
+  allowedBehavior Permission[] // 許可された動作
+  TenantUser      TenantUser[]
+
+  @@unique([name, tenantId])
+}
+
+model TenantUser {
+  id       String @id @default(cuid())
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+  user     User   @relation(fields: [userId], references: [id])
+  tenantId String
+  userId   String
+  roles    Role[]
+
+  @@unique([tenantId, userId])
+}
+
+model MonitoringSettings {
+  id            String  @id @default(cuid())
+  isActive      Boolean
+  checkInterval Int // 対象のヘルスチェックを行う間隔 (seconds)
+}
+
+model MonitoringHost {
+  id       String   @id @default(cuid())
+  host     String
+  port     Int
+  protocol Protocol
+  tenant   Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId String
+
+  @@unique([host, port, protocol, tenantId]) // テナントに同じ条件の物を登録してほしくないので
+}
+
+enum Permission {
+  CREATE_INCIDENT
+  DELETE_INCIDENT
+  UPDATE_INCIDENT
+
+  ADD_MONITORING_HOST
+  DELETE_MONITORING_HOST
+  UPDATE_MONITORING_HOST
+
+  ADD_USER_TO_TENANT
+  DELETE_USER_FROM_TENANT
+}
+
+enum Protocol {
+  HTTP
+  HTTPS
+  TCP
+  UDP
+}
