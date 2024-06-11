@@ -15,9 +15,11 @@
     "@remix-run/express": "^2.9.2",
     "@remix-run/node": "^2.9.2",
     "@remix-run/react": "^2.9.2",
+    "@t3-oss/env-core": "^0.10.1",
     "autoprefixer": "^10.4.19",
     "boring-avatars": "^1.10.2",
     "compression": "^1.7.4",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
     "isbot": "^4.1.0",
     "morgan": "^1.10.0",
@@ -28,7 +30,8 @@
     "remix-auth": "^3.7.0",
     "remix-auth-oauth2": "^2.1.0",
     "remix-utils": "^7.6.0",
-    "tailwindcss": "^3.4.4"
+    "tailwindcss": "^3.4.4",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.9.2",
